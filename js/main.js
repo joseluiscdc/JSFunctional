@@ -15,7 +15,12 @@ const tableRow = items => compose(tableRowTag, tableCells)(items)
 const tableCell = tag('td')
 const tableCells = items => items.map(tableCell).join('')
 
+const inputCell = tag('input')
+const inputsCells = items => items.map(inputCell).join('')
+
 const trashIcon = tag({tag: 'i', attrs: {class: 'fas fa-trash-alt'}})('')
+const editIcon = tag({tag: 'i', attrs: {class: 'fas fa-pencil-alt'}})('')
+const saveIcon = tag({tag: 'i', attrs: {class: 'fas fa-sync-alt'}})('')
 
 let formInputs = {
   description: $('description'),
@@ -98,12 +103,20 @@ const renderItems = () => {
       }
     })(trashIcon)
 
+    const editButton = tag({
+      tag: 'button',
+      attrs: {
+        class: 'btn btn-outline-info',
+        onclick: `editItem(${index})`
+      }
+    })(editIcon)
+
     listWrapper.innerHTML += tableRow([
 			item.description, 
 			item.calories, 
 			item.carbs, 
       item.protein,
-      removeButton
+      `${removeButton} ${editButton}`
 		])
   })
 }
@@ -112,4 +125,71 @@ const removeItem = (index) => {
     list = list.filter((item,i) => i !== index)
     updateTotals()
     renderItems()
+}
+
+const editItem = (index) => {
+  const item = list[(index)]
+  console.log(item)
+  updateTotals()
+  renderEditItems()
+}
+
+const renderEditItems = () => {  
+  const listWrapper = document.querySelector('tbody')
+  listWrapper.innerHTML = ""  
+
+  list.map((item, index) => {
+    const inputDescription = tag({
+      tag: 'input',
+      attrs: {
+        type: 'text',
+        value: `${item.description}`,
+        class: 'form-control mb-2 mr-sm-2'
+      }
+    })()
+
+    const inputCalories = tag({
+      tag: 'input',
+      attrs: {
+        type: 'text',
+        value: `${item.calories}`,
+        class: 'form-control md-2 xs-2'
+      }
+    })()
+
+    const inputCarbs = tag({
+      tag: 'input',
+      attrs: {
+        type: 'text',
+        value: `${item.carbs}`,
+        class: 'form-control md-2 xs-2'
+      }
+    })()
+
+    const inputProtein = tag({
+      tag: 'input',
+      attrs: {
+        type: 'text',
+        value: `${item.protein}`,
+        class: 'form-control md-2 xs-2'
+      }
+    })()
+
+    const saveButton = tag({
+      tag: 'button',
+      attrs: {
+        class: 'btn btn-outline-info',
+        onclick: `saveItem(${index})`,
+        title: 'Save'
+      }
+    })(saveIcon)
+
+    listWrapper.innerHTML += tableRow([
+			inputDescription, 
+			inputCalories, 
+			inputCarbs, 
+      inputProtein,
+      saveButton
+		])
+  })
 }
