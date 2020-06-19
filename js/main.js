@@ -102,7 +102,8 @@ const renderItems = () => {
       tag: 'button',
       attrs: {
         class: 'btn btn-outline-danger',
-        onclick: `removeItem(${index})`
+        onclick: `removeItem(${index})`,
+        title: 'Delete'
       }
     })(trashIcon)
 
@@ -110,7 +111,8 @@ const renderItems = () => {
       tag: 'button',
       attrs: {
         class: 'btn btn-outline-info',
-        onclick: `editItem(${index})`
+        onclick: `editItem(${index})`,
+        title: 'Edit'
       }
     })(editIcon)
 
@@ -131,8 +133,7 @@ const removeItem = (index) => {
 }
 
 const saveItem = (ind) => {
-  list = list.map(
-                  (item, index) => index == ind ? 
+  list = list.map((item, index) => index == ind ? 
                     { description: document.getElementById('des').value, calories: parseInt(document.getElementById('cal').value), carbs: parseInt(document.getElementById('car').value), protein: parseInt(document.getElementById('pro').value) } 
                     : item
                   )
