@@ -1,7 +1,10 @@
 const compose = (...functions) => data => functions.reduceRight((value, func) => func(value), data)
 
 const $ = id => document.getElementById(id)
-let list = []
+let list = [
+  { description: 'Prueba1', calories: 19, carbs: 12, protein: 21 },
+  { description: 'Prueba2', calories: 112, carbs: 62, protein: 31 },
+]
 
 const attrsToString = (obj = {}) => Object.keys(obj).map(attr => `${attr}="${obj[attr]}"`).join(' ')
 
@@ -127,14 +130,24 @@ const removeItem = (index) => {
     renderItems()
 }
 
+const saveItem = (ind) => {
+  list = list.map(
+                  (item, index) => index == ind ? 
+                    { description: document.getElementById('des').value, calories: parseInt(document.getElementById('cal').value), carbs: parseInt(document.getElementById('car').value), protein: parseInt(document.getElementById('pro').value) } 
+                    : item
+                  )
+  updateTotals()
+  renderItems()
+}
+
 const editItem = (index) => {
   const item = list[(index)]
   console.log(item)
   updateTotals()
-  renderEditItems()
+  renderEditItems(index)
 }
 
-const renderEditItems = () => {  
+const renderEditItems = (ind) => {  
   const listWrapper = document.querySelector('tbody')
   listWrapper.innerHTML = ""  
 
@@ -143,6 +156,7 @@ const renderEditItems = () => {
       tag: 'input',
       attrs: {
         type: 'text',
+        id: 'des',
         value: `${item.description}`,
         class: 'form-control mb-2 mr-sm-2'
       }
@@ -152,6 +166,7 @@ const renderEditItems = () => {
       tag: 'input',
       attrs: {
         type: 'text',
+        id: 'cal',
         value: `${item.calories}`,
         class: 'form-control md-2 xs-2'
       }
@@ -161,6 +176,7 @@ const renderEditItems = () => {
       tag: 'input',
       attrs: {
         type: 'text',
+        id: 'car',
         value: `${item.carbs}`,
         class: 'form-control md-2 xs-2'
       }
@@ -170,10 +186,27 @@ const renderEditItems = () => {
       tag: 'input',
       attrs: {
         type: 'text',
+        id: 'pro',
         value: `${item.protein}`,
         class: 'form-control md-2 xs-2'
       }
     })()
+
+    const removeButton = tag({
+      tag: 'button',
+      attrs: {
+        class: 'btn btn-outline-danger',
+        onclick: `removeItem(${index})`
+      }
+    })(trashIcon)
+
+    const editButton = tag({
+      tag: 'button',
+      attrs: {
+        class: 'btn btn-outline-info',
+        onclick: `editItem(${index})`
+      }
+    })(editIcon)    
 
     const saveButton = tag({
       tag: 'button',
@@ -184,12 +217,22 @@ const renderEditItems = () => {
       }
     })(saveIcon)
 
-    listWrapper.innerHTML += tableRow([
-			inputDescription, 
-			inputCalories, 
-			inputCarbs, 
-      inputProtein,
-      saveButton
-		])
+    if(index == ind){
+      listWrapper.innerHTML += tableRow([
+        inputDescription, 
+        inputCalories, 
+        inputCarbs, 
+        inputProtein,
+        saveButton
+      ])      
+    } else {
+      listWrapper.innerHTML += tableRow([
+        item.description, 
+        item.calories, 
+        item.carbs, 
+        item.protein,
+        `${removeButton} ${editButton}`
+      ])
+    }
   })
 }
