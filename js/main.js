@@ -134,7 +134,12 @@ const removeItem = (index) => {
 
 const saveItem = (ind) => {
   list = list.map((item, index) => index == ind ? 
-                    { description: document.getElementById('des').value, calories: parseInt(document.getElementById('cal').value), carbs: parseInt(document.getElementById('car').value), protein: parseInt(document.getElementById('pro').value) } 
+                    { 
+                      description: document.getElementById('des').value, 
+                      calories: parseInt(document.getElementById('cal').value), 
+                      carbs: parseInt(document.getElementById('car').value), 
+                      protein: parseInt(document.getElementById('pro').value) 
+                    } 
                     : item
                   )
   updateTotals()
